@@ -1,6 +1,7 @@
 import os
 import connexion
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 vuln_app = connexion.App(__name__, specification_dir='./openapi_specs')
 
@@ -13,5 +14,5 @@ vuln_app.app.config['SECRET_KEY'] = 'random'
 db = SQLAlchemy(vuln_app.app)
 
 vuln_app.add_api('openapi3.yml')
-
+CORS(vuln_app.app)
 

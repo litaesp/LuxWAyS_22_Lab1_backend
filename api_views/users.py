@@ -17,7 +17,6 @@ def get_all_users():
     return_value = jsonify({'users': User.get_all_users()})
     return return_value
 
-
 def debug():
     return_value = jsonify({'users': User.get_all_users_debug()})
     return return_value
