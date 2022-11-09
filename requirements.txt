@@ -6,3 +6,4 @@ sqlalchemy
 swagger-ui-bundle
 PyJWT~=1.7.1
 markupsafe==2.0.1
+flask_cors~= 3.0.10

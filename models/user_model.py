@@ -13,12 +13,14 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    answer = db.Column(db.String(128), nullable=True)
 
     books = relationship("Book", order_by=Book.id, back_populates="user")
 
-    def __init__(self, username, password, email, admin=False):
+    def __init__(self, username, password, email, answer='', admin=False):
         self.username = username
         self.email = email
+        self.answer = answer
         self.password = password
         self.admin = admin
 
@@ -30,7 +32,8 @@ class User(db.Model):
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=alive),
                 'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'sub': user_id,
+                'admin': self.admin
             }
             return jwt.encode(
                 payload,
@@ -54,7 +57,7 @@ class User(db.Model):
         return{'username': self.username, 'email': self.email}
 
     def json_debug(self):
-        return{'username': self.username, 'password': self.password, 'email': self.email, 'admin': self.admin}
+        return{'username': self.username, 'password': self.password, 'email': self.email, 'answer': self.answer, 'admin': self.admin}
 
     @staticmethod
     def get_all_users():
@@ -71,7 +74,7 @@ class User(db.Model):
             query = db.session.execute(user_query)
             ret = query.fetchone()
             if ret:
-                fin_query = '{"username": "%s", "email": "%s"}' % (ret[1], ret[3])
+                fin_query = '{"username": "%s", "email": "%s", "answer": "%s"}' % (ret[1], ret[3], ret[5])
             else:
                 fin_query = None
         else:
@@ -79,8 +82,8 @@ class User(db.Model):
         return fin_query
 
     @staticmethod
-    def register_user(username, password, email, admin=False):
-        new_user = User(username=username, password=password, email=email, admin=admin)
+    def register_user(username, password, email, answer='', admin=False):
+        new_user = User(username=username, password=password, email=email, answer=answer, admin=admin)
         randomint = str(randrange(100))
         new_user.books = [Book(book_title="bookTitle" + randomint, secret_content="secret for bookTitle" + randomint)]
         db.session.add(new_user)
@@ -94,6 +97,6 @@ class User(db.Model):
 
     @staticmethod
     def init_db_users():
-        User.register_user("name1", "pass1", "mail1@mail.com", False)
-        User.register_user("name2", "pass2", "mail2@mail.com", False)
-        User.register_user("admin", "pass1", "admin@mail.com", True)
+        User.register_user("name1", "pass1", "mail1@mail.com", "name", False)
+        User.register_user("name2", "pass2", "mail2@mail.com", "name",False)
+        User.register_user("admin", "pass1", "admin@mail.com", "name",True)

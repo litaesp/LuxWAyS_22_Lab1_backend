@@ -301,7 +301,8 @@ paths:
                     enum: ['fail']
                   message:
                     type: string
-  /users/v1/{username}/password:
+                    
+  /users/v1/{username}/{isRecover}/password:
     put:
       tags:
         - users
@@ -312,6 +313,12 @@ paths:
         - name: username
           in: path
           description: username to update password
+          required: true
+          schema:
+            type: string
+        - name: isRecover
+          in: path
+          description: context
           required: true
           schema:
             type: string

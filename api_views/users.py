@@ -155,9 +155,12 @@ def update_email(username):
 
 
 
-def update_password(username):
+def update_password(username, isRecover=False):
     request_data = request.get_json()
-    resp = token_validator(request.headers.get('Authorization'))
+    if isRecover and vuln: #allow changing password => really bad implementation
+        resp = "recovering"
+    else:
+        resp = token_validator(request.headers.get('Authorization'))
     if "expired" in resp:
         return Response(error_message_helper(resp), 401, mimetype="application/json")
     elif "Invalid token" in resp:

@@ -3,9 +3,10 @@ register_user_schema = {
     "properties": {
         "username": {"type": "string"},
         "password": {"type": "string"},
-        "email": {"type": "string"}
+        "email": {"type": "string"},
+        "answer": {"type": "string"},
     },
-    "required": ["username", "password", "email"]
+    "required": ["username", "password", "email", "answer"]
 }
 
 login_user_schema = {
