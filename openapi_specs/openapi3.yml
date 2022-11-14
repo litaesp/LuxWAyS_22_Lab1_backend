@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: VAmPI
   description: OpenAPI v3 specs for VAmPI
-  version: '0.1'
+  version: "0.1"
 servers:
   - url: http://localhost:5000
 components: {}
@@ -15,7 +15,7 @@ paths:
       description: Creates and populates the database with dummy data
       operationId: api_views.main.populate_db
       responses:
-        '200':
+        "200":
           description: Creates and populates the database with dummy data
           content:
             application/json:
@@ -36,7 +36,7 @@ paths:
         purposes.
       operationId: api_views.main.basic
       responses:
-        '200':
+        "200":
           description: Home - Help
           content:
             application/json:
@@ -55,7 +55,7 @@ paths:
       description: Displays all users with basic information
       operationId: api_views.users.get_all_users
       responses:
-        '200':
+        "200":
           description: See basic info about all users
           content:
             application/json:
@@ -76,7 +76,7 @@ paths:
       description: Displays all details for all users
       operationId: api_views.users.debug
       responses:
-        '200':
+        "200":
           description: See all details of the users
           content:
             application/json:
@@ -115,7 +115,7 @@ paths:
                   type: string
         required: true
       responses:
-        '200':
+        "200":
           description: Sucessfully created user
           content:
             application/json:
@@ -126,8 +126,8 @@ paths:
                     type: string
                   status:
                     type: string
-                    enum: ['success', 'fail']
-        '400':
+                    enum: ["success", "fail"]
+        "400":
           description: Invalid request
           content: {}
   /users/v1/login:
@@ -150,21 +150,21 @@ paths:
                   type: string
         required: true
       responses:
-        '200':
+        "200":
           description: Sucessfully logged in user
           content:
             application/json:
-                schema:
-                  type: object
-                  properties:
-                    auth_token:
-                      type: string
-                    message:
-                      type: string
-                    status:
-                      type: string
-                      enum: ['success', 'fail']
-        '400':
+              schema:
+                type: object
+                properties:
+                  auth_token:
+                    type: string
+                  message:
+                    type: string
+                  status:
+                    type: string
+                    enum: ["success", "fail"]
+        "400":
           description: Invalid request
           content:
             application/json:
@@ -173,7 +173,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
                   message:
                     type: string
   /users/v1/{username}:
@@ -191,7 +191,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully display user info
           content:
             application/json:
@@ -204,7 +204,7 @@ paths:
                       type: string
                     email:
                       type: string
-        '404':
+        "404":
           description: User not found
           content:
             application/json:
@@ -213,10 +213,9 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
                   message:
                     type: string
-
     delete:
       tags:
         - users
@@ -231,7 +230,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Sucessfully deleted user
           content:
             application/json:
@@ -242,8 +241,8 @@ paths:
                     type: string
                   status:
                     type: string
-                    enum: ['success', 'fail']
-        '401':
+                    enum: ["success", "fail"]
+        "401":
           description: User not authorized
           content:
             application/json:
@@ -252,10 +251,10 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
                   message:
                     type: string
-        '404':
+        "404":
           description: User not found
           content: {}
   /users/v1/{username}/email:
@@ -283,13 +282,13 @@ paths:
                   type: string
         required: true
       responses:
-        '204':
+        "204":
           description: Sucessfully updated user email
           content: {}
-        '400':
+        "400":
           description: Invalid request
           content: {}
-        '401':
+        "401":
           description: User not authorized
           content:
             application/json:
@@ -298,10 +297,10 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
                   message:
                     type: string
-                    
+
   /users/v1/{username}/{isRecover}/password:
     put:
       tags:
@@ -333,13 +332,13 @@ paths:
                   type: string
         required: true
       responses:
-        '204':
+        "204":
           description: Sucessfully updated users password
           content: {}
-        '400':
+        "400":
           description: Invalid request
           content: {}
-        '401':
+        "401":
           description: User not authorized
           content:
             application/json:
@@ -348,7 +347,94 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
+                  message:
+                    type: string
+
+  /users/v1/{id}/account:
+    get:
+      tags:
+        - users
+      summary: Retrieves user by id
+      description: Displays user by id
+      operationId: api_views.users.get_by_id
+      parameters:
+        - name: id
+          in: path
+          description: retrieve user
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successfully display user info
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    username:
+                      type: string
+                    email:
+                      type: string
+                    account:
+                      type: string
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ["fail"]
+                  message:
+                    type: string
+    put:
+      tags:
+        - users
+      summary: Update users account
+      description: Update users account
+      operationId: api_views.users.update_account
+      parameters:
+        - name: id
+          in: path
+          description: username to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: field to update
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                account:
+                  type: string
+        required: true
+      responses:
+        "204":
+          description: Sucessfully updated users password
+          content: {}
+        "400":
+          description: Invalid request
+          content: {}
+        "401":
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ["fail"]
                   message:
                     type: string
   /books/v1:
@@ -359,7 +445,7 @@ paths:
       description: Retrieves all books
       operationId: api_views.books.get_all_books
       responses:
-        '200':
+        "200":
           description: See all books
           content:
             application/json:
@@ -396,7 +482,7 @@ paths:
                   type: string
         required: true
       responses:
-        '200':
+        "200":
           description: Sucessfully added a book
           content:
             application/json:
@@ -407,11 +493,11 @@ paths:
                     type: string
                   status:
                     type: string
-                    enum: ['success', 'fail']
-        '400':
+                    enum: ["success", "fail"]
+        "400":
           description: Invalid request
           content: {}
-        '401':
+        "401":
           description: User not authorized
           content:
             application/json:
@@ -420,7 +506,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
                   message:
                     type: string
   /books/v1/{book_title}:
@@ -440,7 +526,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successfully retrieve book info
           content:
             application/json:
@@ -455,7 +541,7 @@ paths:
                       type: string
                     secret:
                       type: string
-        '401':
+        "401":
           description: User not authorized
           content:
             application/json:
@@ -464,10 +550,10 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
                   message:
                     type: string
-        '404':
+        "404":
           description: Book not found
           content:
             application/json:
@@ -476,7 +562,54 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ['fail']
+                    enum: ["fail"]
                   message:
                     type: string
 
+  /books/v1/file:
+    get:
+      tags:
+        - books
+      summary: Retrieves book text with url
+      description: >-
+        Retrieves book text with url
+      operationId: api_views.books.get_by_url
+      parameters:
+        - name: url
+          in: query
+          description: retrieve book text
+          required: true
+          schema:
+            type: string
+          allowReserved: true
+      responses:
+        "200":
+          description: Successfully retrieve book info
+          content:
+            text/plain:
+              schema:
+                type: object
+        "401":
+          description: User not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ["fail"]
+                  message:
+                    type: string
+        "404":
+          description: unable to fetch url
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: ["fail"]
+                  message:
+                    type: string

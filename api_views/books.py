@@ -1,4 +1,5 @@
 import jsonschema
+import urllib.request
 
 from api_views.users import token_validator
 from config import db
@@ -78,3 +79,7 @@ def get_by_title(book_title):
                 return Response(json.dumps(responseObject), 200, mimetype="application/json")
             else:
                 return Response(error_message_helper("Book not found!"), 404, mimetype="application/json")
+
+def get_by_url(url):
+    with urllib.request.urlopen(url) as response:
+        return Response(response.read(), 200, mimetype="text/plain")

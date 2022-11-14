@@ -28,6 +28,11 @@ def get_by_username(username):
     else:
         return Response(error_message_helper("User not found"), 404, mimetype="application/json")
 
+def get_by_id(id):
+    if User.get_user_account(id):
+        return Response(str(User.get_user_account(id)), 200, mimetype="application/json")
+    else:
+        return Response(error_message_helper("User not found"), 404, mimetype="application/json")
 
 def register_user():
     request_data = request.get_json()
@@ -71,7 +76,7 @@ def login_user():
         # fetching user data if the user exists
         user = User.query.filter_by(username=request_data.get('username')).first()
         if user and request_data.get('password') == user.password:
-            auth_token = user.encode_auth_token(user.username)
+            auth_token = user.encode_auth_token(user.username,user.id)
             responseObject = {
                 'status': 'success',
                 'message': 'Successfully logged in.',
@@ -185,6 +190,35 @@ def update_password(username, isRecover=False):
             return Response(json.dumps(responseObject), 204, mimetype="application/json")
         else:
             return Response(error_message_helper("Malformed Data"), 400, mimetype="application/json")
+
+
+def update_account(id):
+    request_data = request.get_json()
+
+    resp = token_validator(request.headers.get('Authorization'))
+    if "expired" in resp:
+        return Response(error_message_helper(resp), 401, mimetype="application/json")
+    elif "Invalid token" in resp:
+        return Response(error_message_helper(resp), 401, mimetype="application/json")
+    else:
+        if vuln:  # Unauthorized update of password of another user
+            user = User.query.filter_by(id=id).first()
+            if user:
+                user.email = request_data.get('email')
+                user.account = request_data.get('account')
+                db.session.commit()
+            else:
+                return Response(error_message_helper("User Not Found"), 400, mimetype="application/json")
+        else:
+            user = User.query.filter_by(username=resp).first()
+            user.email = request_data.get('email')
+            user.account = request_data.get('account')
+            db.session.commit()
+        responseObject = {
+            'status': 'success',
+            'user': 'Updated.'
+        }
+        return Response(json.dumps(responseObject), 204, mimetype="application/json")
 
 
 

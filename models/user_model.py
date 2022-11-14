@@ -14,25 +14,28 @@ class User(db.Model):
     email = db.Column(db.String(128), nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
     answer = db.Column(db.String(128), nullable=True)
+    account = db.Column(db.String(128), nullable=True)
 
     books = relationship("Book", order_by=Book.id, back_populates="user")
 
-    def __init__(self, username, password, email, answer='', admin=False):
+    def __init__(self, username, password, email, account, answer='', admin=False):
         self.username = username
         self.email = email
         self.answer = answer
         self.password = password
         self.admin = admin
+        self.account = account
 
     def __repr__(self):
         return f"<User(name={self.username}, email={self.email})>"
 
-    def encode_auth_token(self, user_id):
+    def encode_auth_token(self, user_name, id):
         try:
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=alive),
                 'iat': datetime.datetime.utcnow(),
-                'sub': user_id,
+                'id': id,
+                'sub': user_name,
                 'admin': self.admin
             }
             return jwt.encode(
@@ -82,8 +85,22 @@ class User(db.Model):
         return fin_query
 
     @staticmethod
-    def register_user(username, password, email, answer='', admin=False):
-        new_user = User(username=username, password=password, email=email, answer=answer, admin=admin)
+    def get_user_account(id):
+        if vuln:  # SQLi Injection
+            user_query = f"SELECT * FROM users WHERE id = '{id}'"
+            query = db.session.execute(user_query)
+            ret = query.fetchone()
+            if ret:
+                fin_query = '{"username": "%s", "email": "%s", "account": "%s"}' % (ret[1], ret[3], ret[6])
+            else:
+                fin_query = None
+        else:
+            fin_query = User.query.filter_by(id=id).first()
+        return fin_query
+
+    @staticmethod
+    def register_user(username, password, email, account, answer='', admin=False):
+        new_user = User(username=username, password=password, email=email, account=account, answer=answer, admin=admin)
         randomint = str(randrange(100))
         new_user.books = [Book(book_title="bookTitle" + randomint, secret_content="secret for bookTitle" + randomint)]
         db.session.add(new_user)
@@ -97,6 +114,6 @@ class User(db.Model):
 
     @staticmethod
     def init_db_users():
-        User.register_user("name1", "pass1", "mail1@mail.com", "name", False)
-        User.register_user("name2", "pass2", "mail2@mail.com", "name",False)
-        User.register_user("admin", "pass1", "admin@mail.com", "name",True)
+        User.register_user("user1", "pass1", "mail1@mail.com", "374938493094304", "Louga", False)
+        User.register_user("yastai", "pass2", "mail2@mail.com", "48939HDI493893", "Louga", False)
+        User.register_user("admin", "pass1", "admin@mail.com", "849039580394308", "micha", True)

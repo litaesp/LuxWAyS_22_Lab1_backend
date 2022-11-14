@@ -1,13 +1,13 @@
 FROM python:3.7-alpine
 
-RUN mkdir /vampi
+RUN mkdir /app
 RUN apk --update add bash nano g++
 
 ENV vulnerable=1
-ENV tokentimetolive=60
+ENV tokentimetolive=120
 
-COPY . /vampi
-WORKDIR /vampi
+COPY . /app
+WORKDIR /app
 
 RUN pip install -r requirements.txt
 
