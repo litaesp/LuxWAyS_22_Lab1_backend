@@ -1,0 +1,12 @@
+# Premier bout
+
+import logging
+
+# Deuxieme bout
+
+logging.addLevelName(25, 'ALERT_CON')
+logging.basicConfig(filename='logfile.log', level=logging.DEBUG, format=f'Niveau : %(levelname)s | Date : %(asctime)s | Message : %(message)s')
+
+# Last bout
+
+logging.log(level=25, msg=f"Connexion réussi username { user.username }")
