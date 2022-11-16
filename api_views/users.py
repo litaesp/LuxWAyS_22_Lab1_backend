@@ -211,9 +211,12 @@ def update_account(id):
                 return Response(error_message_helper("User Not Found"), 400, mimetype="application/json")
         else:
             user = User.query.filter_by(username=resp).first()
-            user.email = request_data.get('email')
-            user.account = request_data.get('account')
-            db.session.commit()
+            if user.id != id:
+                return Response(error_message_helper(resp), 401, mimetype="application/json")
+            else:
+                user.email = request_data.get('email')
+                user.account = request_data.get('account')
+                db.session.commit()
         responseObject = {
             'status': 'success',
             'user': 'Updated.'
