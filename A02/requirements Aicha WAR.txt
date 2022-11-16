@@ -1,0 +1,6 @@
+Docker : https://docs.docker.com/engine/install
+Juice shop : https://hub.docker.com/r/bkimminich/juice-shop
+ZAP: https://www.zaproxy.org/
+
+VOUS UTILISEZ QUELLE MACHINE POUR LES PRESENTATIONS? 
+I WILL NEED SOMEONE TO HELP ME FOR THAT TOMORROW.
