@@ -1,0 +1,16 @@
+=======================================INSTALLATION MESTASPLOITABLE2==========================
+
+
+sudo /etc/init.d/nginx stop
+
+
+sudo docker pull tleemcjr/metasploitable2
+
+
+sudo docker run -d --network host -it tleemcjr/metasploitable2 sh -c "/bin/services.sh && bash"
+
+
+===============================================================================================
+
+
+
